@@ -16,8 +16,8 @@ export default function DataHub({ onDataUploaded, uploadedData }) {
     setError("");
     setUploading(true);
     try {
-      const data = await uploadCSV(file);
-      onDataUploaded(data);
+    const data = await uploadCSV(file);
+    onDataUploaded(data.dataset || data);
     } catch (err) {
       setError(err.message);
     } finally {

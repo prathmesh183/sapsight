@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
 
-const UserSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
+const DatasetSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  filename: { type: String, required: true },
+  originalName: { type: String, required: true },
+  columns: [String],
+  rows: [mongoose.Schema.Types.Mixed],
+  uploadedAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.models.User || mongoose.model("User", UserSchema);
+module.exports = mongoose.models.Dataset || mongoose.model("Dataset", DatasetSchema);

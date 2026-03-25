@@ -43,7 +43,7 @@ export default function AICopilot({ uploadedData }) {
 
     try {
       const res = await askCopilot(q, uploadedData._id || uploadedData.id);
-      setMessages((m) => [...m, { role: "assistant", text: res.answer || res.message || "Here's what I found." }]);
+setMessages((m) => [...m, { role: "assistant", text: res.reply || res.answer || res.message || "Here's what I found." }]);
     } catch (err) {
       setMessages((m) => [
         ...m,

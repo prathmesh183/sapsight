@@ -24,22 +24,25 @@ router.post("/upload", auth, upload.single("file"), async (req, res) => {
       .pipe(csv())
       .on("data", (data) => results.push(data))
       .on("end", async () => {
-        const columns = results.length > 0 ? Object.keys(results[0]) : [];
-
-        const dataset = new Dataset({
-          userId: req.user.id,
-          filename: req.file.filename,
-          originalName: req.file.originalname,
-          columns,
-          rows: results
-        });
-
-        await dataset.save();
-        fs.unlinkSync(filePath);
-
-        res.json({ message: "File uploaded successfully", dataset });
+        try {
+          const columns = results.length > 0 ? Object.keys(results[0]) : [];
+          const dataset = new Dataset({
+            userId: req.user.id,
+            filename: req.file.filename,
+            originalName: req.file.originalname,
+            columns,
+            rows: results
+          });
+          await dataset.save();
+          fs.unlinkSync(filePath);
+          res.json({ message: "File uploaded successfully", dataset });
+        } catch (err) {
+          console.error("CSV SAVE ERROR:", err.message);
+          res.status(500).json({ message: "Save failed", error: err.message });
+        }
       });
   } catch (err) {
+    console.error("UPLOAD ERROR:", err.message);
     res.status(500).json({ message: "Upload failed", error: err.message });
   }
 });
